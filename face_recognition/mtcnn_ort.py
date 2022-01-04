@@ -44,17 +44,17 @@ class MTCNN(object):
         self._steps_threshold = steps_threshold
         self._scale_factor = scale_factor
 
-        pnet_path = os.path.join(os.path.dirname(__file__), "models/pnet.onnx")
-        rnet_path = os.path.join(os.path.dirname(__file__), "models/rnet.onnx")
-        onet_path = os.path.join(os.path.dirname(__file__), "models/onet.onnx")
+        #pnet_path = os.path.join(os.path.dirname(__file__), "models/pnet.onnx")
+        #rnet_path = os.path.join(os.path.dirname(__file__), "models/rnet.onnx")
+        #onet_path = os.path.join(os.path.dirname(__file__), "models/onet.onnx")
         """
         self._pnet = cv2.dnn.readNetFromONNX(pnet_path)
         self._rnet = cv2.dnn.readNetFromONNX(rnet_path)
         self._onet = cv2.dnn.readNetFromONNX(onet_path)
         """
-        self._pnet = load_model(pnet_path, runner_cls)
-        self._rnet = load_model(rnet_path, runner_cls)
-        self._onet = load_model(onet_path, runner_cls)
+        #self._pnet = load_model(pnet_path, runner_cls)
+        #self._rnet = load_model(rnet_path, runner_cls)
+        #self._onet = load_model(onet_path, runner_cls)
 
 
     @property
