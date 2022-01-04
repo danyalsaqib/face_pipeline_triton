@@ -1,0 +1,18 @@
+name: "arcface_onnx"
+platform: "onnxruntime_onnx"
+max_batch_size : 5
+input [
+  {
+    name: "input_1:0"
+    data_type: TYPE_FP32
+    format: FORMAT_NCHW
+    dims: [3, 112, 112 ]
+  }
+]
+output [
+  {
+    name: "embedding"
+    data_type: TYPE_FP32
+    dims: [512]
+  }
+]
