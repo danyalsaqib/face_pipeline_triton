@@ -1,5 +1,5 @@
-# face_pipeline_v1
-FRS Pipeline for media_v1
+# face_pipeline_triton
+FRS Pipeline for media_v1, implemented on triton.
 
 ## Downloading the ArcFace and MTCNN Models
 Run the script 'face_recognition/models/get_model.py' using the following commands to automatically download the model:
