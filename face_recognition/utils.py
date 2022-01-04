@@ -85,7 +85,7 @@ def findCosineDistance(source_representation, test_representation):
     c = np.sum(np.multiply(test_representation, test_representation))
     return 1 - (a / (np.sqrt(b) * np.sqrt(c)))
 
-def infer_image(img_path, detector, session, input_name, output_name):
+def infer_image(img_path, detector, input_name, output_name):
 
     image = cv2.cvtColor(cv2.imread(img_path), cv2.COLOR_BGR2RGB)
     #image = cv2.resize(image, (1280, 720), interpolation = cv2.INTER_AREA)
