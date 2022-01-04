@@ -20,43 +20,14 @@ def parse_model(model_metadata, model_config):
     requirements for an image classification network (as expected by
     this client)
     """
-    #if len(model_metadata.inputs) != 1:
-    #    raise Exception("expecting 1 input, got {}".format(
-    #        len(model_metadata.inputs)))
-    #if len(model_metadata.outputs) != 1:
-    #    raise Exception("expecting 1 output, got {}".format(
-    #        len(model_metadata.outputs)))
-
-    #if len(model_config.input) != 1:
-    #    raise Exception(
-    #        "expecting 1 input in model configuration, got {}".format(
-    #            len(model_config.input)))
 
     input_metadata = model_metadata.inputs[0]
     input_config = model_config.input[0]
     output_metadata = model_metadata.outputs
 
-    #if output_metadata.datatype != "FP32":
-    #    raise Exception("expecting output datatype to be FP32, model '" +
-    #                    model_metadata.name + "' output type is " +
-    #                    output_metadata.datatype)
-
-    # Output is expected to be a vector. But allow any number of
-    # dimensions as long as all but 1 is size 1 (e.g. { 10 }, { 1, 10
-    # }, { 10, 1, 1 } are all ok). Ignore the batch dimension if there
-    # is one.
     output_batch_dim = (model_config.max_batch_size > 0)
     non_one_cnt = 0
-    #for dim in output_metadata.shape:
-    #    if output_batch_dim:
-    #        output_batch_dim = False
-    #    elif dim > 1:
-    #        non_one_cnt += 1
-    #        if non_one_cnt > 1:
-    #            raise Exception("expecting model output to be a vector")
-
-    # Model input must have 3 dims, either CHW or HWC (not counting
-    # the batch dimension), either CHW or HWC
+    
     input_batch_dim = (model_config.max_batch_size > 0)
     expected_input_dims = 3 + (1 if input_batch_dim else 0)
     if len(input_metadata.shape) != expected_input_dims:
@@ -69,14 +40,6 @@ def parse_model(model_metadata, model_config):
         FORMAT_ENUM_TO_INT = dict(mc.ModelInput.Format.items())
         input_config.format = FORMAT_ENUM_TO_INT[input_config.format]
 
-    #if ((input_config.format != mc.ModelInput.FORMAT_NCHW) and
-    #    (input_config.format != mc.ModelInput.FORMAT_NHWC)):
-    #    raise Exception("unexpected input format " +
-    #                    mc.ModelInput.Format.Name(input_config.format) +
-    #                    ", expecting " +
-    #                    mc.ModelInput.Format.Name(mc.ModelInput.FORMAT_NCHW) +
-    #                    " or " +
-    #                    mc.ModelInput.Format.Name(mc.ModelInput.FORMAT_NHWC))
     output_names = []
     for out_layer in output_metadata:
         output_names.append(out_layer.name)
@@ -115,32 +78,6 @@ def convert_http_metadata_config(_metadata, _config):
     _model_config = AttrDict(_config)
 
     return _model_metadata, _model_config
-
-def postprocess(results, output_name, batch_size, batching):
-    """
-    Post-process results to show classifications.
-    """
-
-    output_array = results.as_numpy(output_name)
-    print("Output Array: ", output_array)
-    print("Output Array Shape: ", output_array.shape)
-    if len(output_array) != batch_size:
-        raise Exception("expected {} results, got {}".format(
-            batch_size, len(output_array)))
-
-    # Include special handling for non-batching models
-    for results in output_array:
-        print("Results: ", results)
-        if not batching:
-            results = [results]
-        for result in results:
-            print("Single Result: :", result)
-            if output_array.dtype.type == np.object_:
-                cls = "".join(chr(x) for x in result).split(':')
-            else:
-                cls = result.split(':')
-            print("CLS: ", cls)
-            print("    {} ({}) = {}".format(cls[0], cls[1], cls[2]))
 
 def trt_infer(blob, model_name, model_version=''):
 
