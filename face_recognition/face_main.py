@@ -8,10 +8,10 @@ import json
 detector = MTCNN()
 
 # Initializing the recognizer
-model_path = "models/arcface.onnx"
-session = onnxruntime.InferenceSession(model_path, None)
-input_name = session.get_inputs()[0].name
-output_name = session.get_outputs()[0].name
+#model_path = "models/arcface.onnx"
+#session = onnxruntime.InferenceSession(model_path, None)
+#input_name = session.get_inputs()[0].name
+#output_name = session.get_outputs()[0].name
 
 file_batch_dict = {
     "frame_2" : "images/11.png"
@@ -76,7 +76,7 @@ def infer_batch(batch_dict):
     start = time.time()
     for image_path in batch_dict:
         #print("Frame : ", batch_dict[image_path])
-        results[image_path] = infer_image(batch_dict[image_path], detector, session, input_name, output_name)
+        results[image_path] = infer_image(batch_dict[image_path], detector, input_name, output_name)
     end = time.time()
     #print("Total time : ", end - start)
 
