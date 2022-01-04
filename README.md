@@ -3,6 +3,7 @@ FRS Pipeline for media_v1, implemented on triton.
 
 ## Downloading the ArcFace and MTCNN Models
 The models can be found at: https://drive.google.com/drive/folders/1u9XG2auv0o_k_KD9Ahr4J3WJUdZCgJ5-?usp=sharing
+
 This is the model directory path, that should be given to the Triton Server Docker on startup.
 
 ## Dockerfile
