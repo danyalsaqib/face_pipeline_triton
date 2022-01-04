@@ -2,10 +2,8 @@
 FRS Pipeline for media_v1, implemented on triton.
 
 ## Downloading the ArcFace and MTCNN Models
-Run the script 'face_recognition/models/get_model.py' using the following commands to automatically download the model:
-```
-python3 face_recognition/models/get_model.py
-```
+The models can be found at: https://drive.google.com/drive/folders/1u9XG2auv0o_k_KD9Ahr4J3WJUdZCgJ5-?usp=sharing
+This is the model directory path, that should be given to the Triton Server Docker on startup.
 
 ## Dockerfile
 The dockerfile contains instructions to first install necessary libraries, and then copy the 'retinaface_functions/' directory into a local docker directory using the command `COPY face_recognition /face_recognition`. The docker uses the tensorflow container as its parent, given by `FROM nvcr.io/nvidia/tensorflow:21.11-tf2-py3`
