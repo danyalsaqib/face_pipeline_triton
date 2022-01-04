@@ -76,7 +76,7 @@ def infer_batch(batch_dict):
     start = time.time()
     for image_path in batch_dict:
         #print("Frame : ", batch_dict[image_path])
-        results[image_path] = infer_image(batch_dict[image_path], detector, input_name, output_name)
+        results[image_path] = infer_image(batch_dict[image_path], detector)
     end = time.time()
     #print("Total time : ", end - start)
 
