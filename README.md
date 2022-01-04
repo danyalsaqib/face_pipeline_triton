@@ -11,11 +11,11 @@ The dockerfile contains instructions to first install necessary libraries, and t
 
 To build the docker, simply use the following command. Remember that the dot at the end is important:
 ```
-sudo docker build -t face_pipeline_v1:single .
+docker build -t face_pipeline_triton:single .
 ```
 To run the docker after successfully building it, use the following command:
 ```
-sudo docker run --gpus all -it --rm face_pipeline_v1:single
+sudo docker run --gpus all -it --rm face_pipeline_triton:single
 ```
 
 ## Running the complete pipeline
