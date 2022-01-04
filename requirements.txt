@@ -4,4 +4,5 @@ onnx==1.10.2
 numpy==1.21.4
 Flask==2.0.2
 scikit-image==0.19.0
+attrdict
 # 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
