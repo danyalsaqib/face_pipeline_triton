@@ -15,7 +15,7 @@ docker build -t face_pipeline_triton:single .
 ```
 To run the docker after successfully building it, use the following command:
 ```
-sudo docker run --gpus all -it --rm face_pipeline_triton:single
+docker run --gpus all -it --rm face_pipeline_triton:single
 ```
 
 ## Running the complete pipeline
