@@ -6,7 +6,7 @@ import json
 import os
 from mtcnn_ort import MTCNN
 import time
-from trt_inference import trt_infer
+from trt_inference import trt_infer, trt_cosineDistance
 
 src = np.array([
         [30.2946, 51.6963],
@@ -137,7 +137,7 @@ def infer_image(img_path, detector):
                 #start = time.time()
                 for j in range(len(data["embeddings"])):
                     #distance = findCosineDistance(result[0][0], data["embeddings"][j])
-                    distance = findCosineDistance(result[0][0], data["embeddings"][j])
+                    distance = trt_cosineDistance(result[0][0], data["embeddings"][j])
                     if (distance < distance_threshold) and (distance < best_distance):
                         best_index = j
                         best_distance = distance
