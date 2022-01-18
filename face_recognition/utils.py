@@ -6,7 +6,7 @@ import json
 import os
 from mtcnn_ort import MTCNN
 import time
-from trt_inference import trt_infer, trt_cosineDistance
+from trt_inference import trt_infer, trt_cosineDistance, trt_mtcnn
 
 src = np.array([
         [30.2946, 51.6963],
@@ -90,7 +90,8 @@ def infer_image(img_path, detector):
     image = cv2.cvtColor(cv2.imread(img_path), cv2.COLOR_BGR2RGB)
     #image = cv2.resize(image, (1280, 720), interpolation = cv2.INTER_AREA)
     start = time.time()
-    faces = detector.detect_faces_raw(image)
+    #faces = detector.detect_faces_raw(image)
+    faces = trt_mtcnn(image)
     end = time.time()
     #print("Detection Time = ", end - start)
     celeb = []
@@ -127,6 +128,7 @@ def infer_image(img_path, detector):
                 # Recognition
                 #result = session.run([output_name], {input_name: blob})
                 #print("Result Shape ONNX: ", len(result[0][0]))
+                #print("Input to ArcFace: ", blob.shape)
                 result = trt_infer(blob, model_name='arcface_onnx')
                 print("Result Shape Triton ArcFace: ", len(result[0][0]))
 
@@ -136,8 +138,8 @@ def infer_image(img_path, detector):
                 best_index = -1
                 #start = time.time()
                 for j in range(len(data["embeddings"])):
-                    #distance = findCosineDistance(result[0][0], data["embeddings"][j])
-                    distance = trt_cosineDistance(result[0][0], data["embeddings"][j])
+                    distance = findCosineDistance(result[0][0], data["embeddings"][j])
+                    #distance = trt_cosineDistance(result[0][0], data["embeddings"][j])
                     if (distance < distance_threshold) and (distance < best_distance):
                         best_index = j
                         best_distance = distance

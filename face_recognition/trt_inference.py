@@ -29,12 +29,12 @@ def parse_model(model_metadata, model_config):
     non_one_cnt = 0
     
     input_batch_dim = (model_config.max_batch_size > 0)
-    expected_input_dims = 3 + (1 if input_batch_dim else 0)
-    if len(input_metadata.shape) != expected_input_dims:
-        raise Exception(
-            "expecting input to have {} dimensions, model '{}' input has {}".
-            format(expected_input_dims, model_metadata.name,
-                    len(input_metadata.shape)))
+    #expected_input_dims = 3 + (1 if input_batch_dim else 0)
+    #if len(input_metadata.shape) != expected_input_dims:
+    #    raise Exception(
+    #        "expecting input to have {} dimensions, model '{}' input has {}".
+    #        format(expected_input_dims, model_metadata.name,
+    #                len(input_metadata.shape)))
 
     if type(input_config.format) == str:
         FORMAT_ENUM_TO_INT = dict(mc.ModelInput.Format.items())
@@ -84,7 +84,7 @@ def trt_infer(blob, model_name, model_version=''):
     # Recognition
     #result = session.run([output_name], {input_name: blob})
     triton_client = httpclient.InferenceServerClient(
-                    'localhost:8000', verbose=False, concurrency=1)
+                    'localhost:8003', verbose=False, concurrency=1)
     batch_size = len(blob)
     #print("Batch Size: ", batch_size)
     responses = []
@@ -200,3 +200,34 @@ def trt_cosineDistance(emb0, emb1):
         output0_data = response.as_numpy("OUTPUT0")
         #print("Output Cosine Distance: ", output0_data[0])
         return output0_data
+
+def trt_mtcnn(im0):
+    model_name = "mtcnn_trt"
+    with httpclient.InferenceServerClient("localhost:8003") as client:
+        #emb0 = np.array(im0)
+        #emb1 = np.array(emb1)
+        input0_data = im0.astype(np.float32)
+        #input1_data = emb1.astype(np.float32)
+        inputs = [
+            httpclient.InferInput("INPUT0", input0_data.shape,
+                                   np_to_triton_dtype(input0_data.dtype))
+        ]
+
+        inputs[0].set_data_from_numpy(input0_data)
+        #inputs[1].set_data_from_numpy(input1_data)
+
+        outputs = [
+            httpclient.InferRequestedOutput("OUTPUT0"),
+            httpclient.InferRequestedOutput("OUTPUT1")
+        ]
+
+        response = client.infer(model_name,
+                                inputs,
+                                request_id=str(1),
+                                outputs=outputs)
+
+        result = response.get_response()
+        output0_data = response.as_numpy("OUTPUT0")
+        output1_data = response.as_numpy("OUTPUT1")
+        #print("TRT MTCNN Second Output: ", output1_data)
+        return output0_data, output1_data

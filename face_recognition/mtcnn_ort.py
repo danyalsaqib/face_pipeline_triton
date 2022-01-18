@@ -282,6 +282,7 @@ class MTCNN(object):
         status = stage_status
 
         for scale in scales:
+            print("Scale Shape: ", scale)
             scaled_image = self.__scale_image(image, scale)
 
             img_x = np.expand_dims(scaled_image, 0)
@@ -293,6 +294,7 @@ class MTCNN(object):
             """
             #out = self._pnet(img_y)
             #print ("Out Shape ONNX: ", len(out))
+            print("Input to PNET: ", img_y.shape)
             out = trt_infer(img_y, model_name='pnet_onnx')
             #print("Result Shape Triton: ", len(out))
 
@@ -367,6 +369,7 @@ class MTCNN(object):
         out = self._rnet.forward(['dense_2', 'softmax_1'])
         """
         #out = self._rnet(tempimg1)
+        print("Input to RNET: ", tempimg1.shape)
         out = trt_infer(tempimg1, model_name='rnet_onnx')
 
         out0 = np.transpose(out[0])
@@ -427,6 +430,7 @@ class MTCNN(object):
         out = self._onet.forward(['dense_5', 'dense_6', 'softmax_2'])
         """
         #out = self._onet(tempimg1)
+        print("Input to ONET: ", tempimg1.shape)
         out = trt_infer(tempimg1, model_name='onet_onnx')
         out0 = np.transpose(out[0])
         out1 = np.transpose(out[1])
