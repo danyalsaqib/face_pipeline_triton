@@ -186,7 +186,7 @@ def trt_infer_original(blob, model_name, model_version=''):
     sent_count = 0
 
     for inputs, outputs, model_name, model_version in requestGenerator(
-        batched_image_data, input_name, output_name, dtype, model_name, model_version):
+        batched_image_data, input_name, output_name, dtype, model_name, model_version)
         sent_count += 1
         async_requests.append(
             triton_client.async_infer(
