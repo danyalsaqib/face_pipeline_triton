@@ -109,7 +109,7 @@ def requestGenerator(batched_image_data, input_name, output_name, dtype, model_n
     # Set the input data
     inputs = []
     for in_layer in input_name:
-        inputs.append(client.InferRequestedOutput(in_layer))
+        inputs.append(client.InferInput(in_layer))
     #print("Datatype: ", dtype)
     #print("Batch Datatype: ", batched_image_data.dtype)
     #inputs[0].set_data_from_numpy(batched_image_data)
