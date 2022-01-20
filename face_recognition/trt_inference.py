@@ -65,7 +65,7 @@ def parse_model_2(model_metadata, model_config):
     """
 
     input_metadata = model_metadata.inputs
-    input_config = model_config.input
+    #input_config = model_config.input
     input_names = []
     for in_layer in input_metadata:
         input_names.append(in_layer.name)
@@ -82,26 +82,25 @@ def parse_model_2(model_metadata, model_config):
     #        format(expected_input_dims, model_metadata.name,
     #                len(input_metadata.shape)))
 
-    if type(input_config.format) == str:
-        FORMAT_ENUM_TO_INT = dict(mc.ModelInput.Format.items())
-        input_config.format = FORMAT_ENUM_TO_INT[input_config.format]
+    #if type(input_config.format) == str:
+    #    FORMAT_ENUM_TO_INT = dict(mc.ModelInput.Format.items())
+    #    input_config.format = FORMAT_ENUM_TO_INT[input_config.format]
 
     output_names = []
     for out_layer in output_metadata:
         output_names.append(out_layer.name)
 
-    if input_config.format == mc.ModelInput.FORMAT_NHWC:
-        h = input_metadata.shape[1 if input_batch_dim else 0]
-        w = input_metadata.shape[2 if input_batch_dim else 1]
-        c = input_metadata.shape[3 if input_batch_dim else 2]
-    else:
-        c = input_metadata.shape[1 if input_batch_dim else 0]
-        h = input_metadata.shape[2 if input_batch_dim else 1]
-        w = input_metadata.shape[3 if input_batch_dim else 2]
+    #if input_config.format == mc.ModelInput.FORMAT_NHWC:
+    #    h = input_metadata.shape[1 if input_batch_dim else 0]
+    #    w = input_metadata.shape[2 if input_batch_dim else 1]
+    #    c = input_metadata.shape[3 if input_batch_dim else 2]
+    #else:
+    #    c = input_metadata.shape[1 if input_batch_dim else 0]
+    #    h = input_metadata.shape[2 if input_batch_dim else 1]
+    #    w = input_metadata.shape[3 if input_batch_dim else 2]
 
     return (model_config.max_batch_size, input_metadata.name,
-        output_names, c, h, w, input_config.format,
-        input_metadata.datatype)
+        output_names, input_metadata.datatype)
 
 
 def requestGenerator(batched_image_data, input_name, output_name, dtype, model_name, model_version):
@@ -150,7 +149,7 @@ def trt_infer(blob, model_name, model_version=''):
     model_metadata, model_config = convert_http_metadata_config(
         model_metadata, model_config)
 
-    max_batch_size, input_name, output_name, c, h, w, format, dtype = parse_model_2(
+    max_batch_size, input_name, output_name, dtype = parse_model_2(
         model_metadata, model_config)
 
     #print("Output Names: ", output_name)
