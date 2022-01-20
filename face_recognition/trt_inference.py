@@ -107,9 +107,13 @@ def requestGenerator(batched_image_data, input_name, output_name, dtype, model_n
     client = httpclient
 
     # Set the input data
+    inputs = [client.InferInput(input_name, batched_image_data.shape, dtype)]
+    inputs[0].set_data_from_numpy(batched_image_data)
+    """
     inputs = []
     for in_layer in input_name:
         inputs.append(client.InferInput(in_layer, batched_image_data.shape, dtype))
+    """
     #print("Datatype: ", dtype)
     #print("Batch Datatype: ", batched_image_data.dtype)
     #inputs[0].set_data_from_numpy(batched_image_data)
@@ -127,7 +131,7 @@ def convert_http_metadata_config(_metadata, _config):
 
     return _model_metadata, _model_config
 
-def trt_infer_original(blob, model_name, model_version=''):
+def trt_infer(blob, model_name, model_version=''):
 
     # Recognition
     #result = session.run([output_name], {input_name: blob})
@@ -150,7 +154,7 @@ def trt_infer_original(blob, model_name, model_version=''):
     model_metadata, model_config = convert_http_metadata_config(
         model_metadata, model_config)
 
-    max_batch_size, input_name, output_name, dtype = parse_model_2(
+    max_batch_size, input_name, output_name, c, h, w, format, dtype = parse_model(
         model_metadata, model_config)
 
     #print("Output Names: ", output_name)
@@ -220,7 +224,7 @@ def trt_infer_original(blob, model_name, model_version=''):
     return output_array
 
 
-def trt_infer(blob, model_name, model_version=''):
+def trt_infer_modified(blob, model_name, model_version=''):
 
     # Recognition
     #result = session.run([output_name], {input_name: blob})
@@ -311,6 +315,7 @@ def trt_infer(blob, model_name, model_version=''):
     #print("Async Requests: ", async_requests)
     #print("Output List Length: ", len(output_array))
     return output_array
+
 def trt_cosineDistance(emb0, emb1):
     model_name = "comparator"
     with httpclient.InferenceServerClient("localhost:8003") as client:
