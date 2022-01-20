@@ -121,8 +121,8 @@ def requestGenerator(batched_image_data, input_name, output_name, dtype, model_n
     for out_layer in output_name:
         outputs.append(client.InferRequestedOutput(out_layer))
 
-    #yield inputs, outputs, model_name, model_version
-    return inputs, outputs, model_name, model_version
+    yield inputs, outputs, model_name, model_version
+    #return inputs, outputs, model_name, model_version
 
 
 def convert_http_metadata_config(_metadata, _config):
