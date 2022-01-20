@@ -100,7 +100,7 @@ def parse_model_2(model_metadata, model_config):
     #    w = input_metadata.shape[3 if input_batch_dim else 2]
 
     return (model_config.max_batch_size, input_names,
-        output_names, input_metadata.datatype)
+        output_names, input_metadata[0].datatype)
 
 
 def requestGenerator(batched_image_data, input_name, output_name, dtype, model_name, model_version):
