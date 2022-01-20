@@ -150,7 +150,7 @@ def trt_infer(blob, model_name, model_version=''):
     model_metadata, model_config = convert_http_metadata_config(
         model_metadata, model_config)
 
-    max_batch_size, input_name, output_name, c, h, w, format, dtype = parse_model(
+    max_batch_size, input_name, output_name, c, h, w, format, dtype = parse_model_2(
         model_metadata, model_config)
 
     #print("Output Names: ", output_name)
