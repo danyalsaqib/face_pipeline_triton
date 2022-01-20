@@ -117,7 +117,8 @@ def requestGenerator(batched_image_data, input_name, output_name, dtype, model_n
     for out_layer in output_name:
         outputs.append(client.InferRequestedOutput(out_layer))
 
-    yield inputs, outputs, model_name, model_version
+    #yield inputs, outputs, model_name, model_version
+    return inputs, outputs, model_name, model_version
 
 
 def convert_http_metadata_config(_metadata, _config):
@@ -278,8 +279,7 @@ def trt_infer(blob, model_name, model_version=''):
 
     sent_count = 0
 
-    inputs, outputs, model_name, model_version = requestGenerator(
-        batched_image_data, input_name, output_name, dtype, model_name, model_version)
+    inputs, outputs, model_name, model_version = requestGenerator(batched_image_data, input_name, output_name, dtype, model_name, model_version)
     for output in outputs:
         sent_count += 1
         async_requests.append(
