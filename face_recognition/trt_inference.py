@@ -107,7 +107,7 @@ def requestGenerator(batched_image_data, input_name, output_name, dtype, model_n
     client = httpclient
 
     # Set the input data
-    print("Input Names: ", input_name)
+    #print("Input Names: ", input_name)
     inputs = [client.InferInput(input_name, batched_image_data.shape, dtype)]
     inputs[0].set_data_from_numpy(batched_image_data)
     """
@@ -119,7 +119,7 @@ def requestGenerator(batched_image_data, input_name, output_name, dtype, model_n
     #print("Batch Datatype: ", batched_image_data.dtype)
     #inputs[0].set_data_from_numpy(batched_image_data)
     outputs = []
-    print("Output Names: ", output_name)
+    #print("Output Names: ", output_name)
     for out_layer in output_name:
         outputs.append(client.InferRequestedOutput(out_layer))
 
