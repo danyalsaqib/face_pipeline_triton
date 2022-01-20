@@ -57,15 +57,63 @@ def parse_model(model_metadata, model_config):
         output_names, c, h, w, input_config.format,
         input_metadata.datatype)
 
+def parse_model_2(model_metadata, model_config):
+    """
+    Check the configuration of a model to make sure it meets the
+    requirements for an image classification network (as expected by
+    this client)
+    """
+
+    input_metadata = model_metadata.inputs
+    input_config = model_config.input
+    input_names = []
+    for in_layer in input_metadata:
+        input_names.append(in_layer.name)
+    output_metadata = model_metadata.outputs
+
+    output_batch_dim = (model_config.max_batch_size > 0)
+    non_one_cnt = 0
+    
+    input_batch_dim = (model_config.max_batch_size > 0)
+    #expected_input_dims = 3 + (1 if input_batch_dim else 0)
+    #if len(input_metadata.shape) != expected_input_dims:
+    #    raise Exception(
+    #        "expecting input to have {} dimensions, model '{}' input has {}".
+    #        format(expected_input_dims, model_metadata.name,
+    #                len(input_metadata.shape)))
+
+    if type(input_config.format) == str:
+        FORMAT_ENUM_TO_INT = dict(mc.ModelInput.Format.items())
+        input_config.format = FORMAT_ENUM_TO_INT[input_config.format]
+
+    output_names = []
+    for out_layer in output_metadata:
+        output_names.append(out_layer.name)
+
+    if input_config.format == mc.ModelInput.FORMAT_NHWC:
+        h = input_metadata.shape[1 if input_batch_dim else 0]
+        w = input_metadata.shape[2 if input_batch_dim else 1]
+        c = input_metadata.shape[3 if input_batch_dim else 2]
+    else:
+        c = input_metadata.shape[1 if input_batch_dim else 0]
+        h = input_metadata.shape[2 if input_batch_dim else 1]
+        w = input_metadata.shape[3 if input_batch_dim else 2]
+
+    return (model_config.max_batch_size, input_metadata.name,
+        output_names, c, h, w, input_config.format,
+        input_metadata.datatype)
+
 
 def requestGenerator(batched_image_data, input_name, output_name, dtype, model_name, model_version):
     client = httpclient
 
     # Set the input data
-    inputs = [client.InferInput(input_name, batched_image_data.shape, dtype)]
+    inputs = []
+    for in_layer in input_name:
+        inputs.append(client.InferRequestedOutput(in_layer))
     #print("Datatype: ", dtype)
     #print("Batch Datatype: ", batched_image_data.dtype)
-    inputs[0].set_data_from_numpy(batched_image_data)
+    #inputs[0].set_data_from_numpy(batched_image_data)
     outputs = []
     for out_layer in output_name:
         outputs.append(client.InferRequestedOutput(out_layer))
