@@ -99,7 +99,7 @@ def parse_model_2(model_metadata, model_config):
     #    h = input_metadata.shape[2 if input_batch_dim else 1]
     #    w = input_metadata.shape[3 if input_batch_dim else 2]
 
-    return (model_config.max_batch_size, input_metadata.name,
+    return (model_config.max_batch_size, input_names,
         output_names, input_metadata.datatype)
 
 
